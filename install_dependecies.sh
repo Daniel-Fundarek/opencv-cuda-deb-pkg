@@ -17,6 +17,7 @@ else
 	sudo apt-get install -y libavresample-dev libdc1394-22-dev
 fi
 
+sudo apt-get install -y nvidia-jetpack
 sudo apt-get install -y libjpeg-dev libjpeg8-dev libjpeg-turbo8-dev
 sudo apt-get install -y libpng-dev libtiff-dev libglew-dev
 sudo apt-get install -y libavcodec-dev libavformat-dev libswscale-dev
