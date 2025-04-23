@@ -4,10 +4,7 @@ Working with up to date version of OpenCV when using Debian or Ubuntu, both comm
 
 ## Features
 
-- all CUDA features are enabled
-- GAPI support (C++ and Python) is enabled
-
-               
+- all CUDA features are enabled            
 
 ## Instructions
 
