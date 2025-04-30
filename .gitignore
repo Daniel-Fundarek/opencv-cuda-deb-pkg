@@ -1,0 +1,5 @@
+# Ignore everything in build/
+build/*
+
+# But not .deb files
+!build/*.deb
