@@ -32,7 +32,8 @@ sudo apt-get install -y \
   libopenblas-dev libatlas-base-dev libblas-dev \
   liblapack-dev liblapacke-dev libeigen3-dev gfortran \
   libhdf5-dev libprotobuf-dev protobuf-compiler \
-  libgoogle-glog-dev libgflags-dev
+  libgoogle-glog-dev libgflags-dev \
+  libgphoto2-dev libopenexr-dev libcharls2
 
 sudo apt-get remove -y libopencv libopencv-* libopencv4.2*
 sudo apt-get purge -y libopencv libopencv-* libopencv4.2*

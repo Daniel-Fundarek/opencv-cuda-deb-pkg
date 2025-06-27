@@ -25,8 +25,14 @@ Create and install deb package:
 If you want to only install debian package:
 
 1. clone repository
-2. execute `./install_dependecies.sh`
+2. execute `./install_dependencies.sh`
 3. install `sudo dpkg -i ./build/opencv-cuda_x.x.x-x_all.deb`
+
+Test opencv with cuda with:
+```
+    g++ -o test_cuda test_opencv_cuda.cpp `pkg-config --cflags --libs opencv4` -lopencv_core -lopencv_cudaimgproc
+    ./test_cuda
+```
 
 ## Other notes
 - tested with `orin_nx`

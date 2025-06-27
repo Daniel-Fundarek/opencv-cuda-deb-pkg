@@ -48,10 +48,10 @@ Build-Depends: ant [!hppa !hurd-any !kfreebsd-any],
                python3-dev,
                python3-numpy,
                python3-bs4,
-               cuda-libraries-dev-11-4,
-               cuda-drivers-dev-11-4,
+               cuda-libraries-dev-12-6,
+               cuda-drivers-dev-12-6,
                zlib1g-dev
-Standards-Version: 4.7.0
+Standards-Version: 4.10.0
 Homepage: https://opencv.org
 Rules-Requires-Root: no
 
@@ -74,10 +74,10 @@ Depends: libjs-jquery,
          zlib1g-dev,
          libcharls2,
          libtbb-dev,
-         cuda-toolkit-11-4,
+         cuda-toolkit-12-6,
          libthrust-dev,
-         cuda-libraries-11-4,
-         cuda-libraries-dev-11-4,
+         cuda-libraries-12-6,
+         cuda-libraries-dev-12-6,
          ${misc:Depends},
          ${shlibs:Depends},
          ${python3:Depends}

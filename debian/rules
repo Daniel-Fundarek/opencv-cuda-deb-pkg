@@ -145,7 +145,7 @@ CMAKE_FLAGS += \
 	-DCMAKE_TRACE_MODE=OFF \
 	-DCUDNN_LIBRARY=/usr/lib/aarch64-linux-gnu/libcudnn.so \
 	-DCUDNN_INCLUDE_DIR=/usr/include \
-	-DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda-11.4
+	-DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda-12.6
 %:
 	dh $@
 

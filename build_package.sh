@@ -1,12 +1,29 @@
 #!/bin/bash
 
-version=4.9.0
-sha256_main_source="ddf76f9dffd322c7c3cb1f721d0887f62d747b82059342213138dc190f28bc6c"
-sha256_contrib_source="8952c45a73b75676c522dd574229f563e43c271ae1d5bbbd26f8e2b6bc1a4dae"
+version=4.10.0
 
 sudo apt-get update
-sudo apt-get install debhelper
-sudo apt-get install dh-python
+
+sudo apt-get install -y \
+  debhelper dh-python  nvidia-jetpack libjpeg-dev \
+  libjpeg8-dev libjpeg-turbo8-dev \
+  libpng-dev libtiff-dev libglew-dev \
+  libavcodec-dev libavformat-dev libswscale-dev \
+  libgtk2.0-dev libgtk-3-dev libcanberra-gtk* \
+  python3-pip \
+  libxvidcore-dev libx264-dev \
+  libtbb-dev libxine2-dev \
+  libv4l-dev v4l-utils qv4l2 \
+  libtesseract-dev libpostproc-dev \
+  libvorbis-dev \
+  libfaac-dev libmp3lame-dev libtheora-dev \
+  libopencore-amrnb-dev libopencore-amrwb-dev \
+  libopenblas-dev libatlas-base-dev libblas-dev \
+  liblapack-dev liblapacke-dev libeigen3-dev gfortran \
+  libhdf5-dev libprotobuf-dev protobuf-compiler \
+  libgoogle-glog-dev libgflags-dev \
+  libgphoto2-dev libopenexr-dev libcharls2
+
 
 if [ -f /etc/os-release ]; then
 	# Source the /etc/os-release file to get variables
@@ -23,24 +40,9 @@ else
 	sudo apt-get install -y libavresample-dev libdc1394-22-dev
 fi
 
-sudo apt-get install -y libjpeg-dev libjpeg8-dev libjpeg-turbo8-dev
-sudo apt-get install -y libpng-dev libtiff-dev libglew-dev
-sudo apt-get install -y libavcodec-dev libavformat-dev libswscale-dev
-sudo apt-get install -y libgtk2.0-dev libgtk-3-dev libcanberra-gtk*
-sudo apt-get install -y python3-pip
-sudo apt-get install -y libxvidcore-dev libx264-dev
-sudo apt-get install -y libtbb-dev libxine2-dev
-sudo apt-get install -y libv4l-dev v4l-utils qv4l2
-sudo apt-get install -y libtesseract-dev libpostproc-dev
-sudo apt-get install -y libvorbis-dev
-sudo apt-get install -y libfaac-dev libmp3lame-dev libtheora-dev
-sudo apt-get install -y libopencore-amrnb-dev libopencore-amrwb-dev
-sudo apt-get install -y libopenblas-dev libatlas-base-dev libblas-dev
-sudo apt-get install -y liblapack-dev liblapacke-dev libeigen3-dev gfortran
-sudo apt-get install -y libhdf5-dev libprotobuf-dev protobuf-compiler
-sudo apt-get install -y libgoogle-glog-dev libgflags-dev
 sudo apt install libjs-mathjax -y
 sudo apt install libthrust-dev -y
+sudo apt install curl -y
 
 echo "Creating build folders"
 if [ -d "./build" ]
@@ -72,14 +74,6 @@ if ! [ -f "./build/opencv_$version.orig.tar.gz" ]
 then
 	echo "Downloading OpenCV main source"
 	curl -L -o "./build/opencv_$version.orig.tar.gz" "https://github.com/opencv/opencv/archive/refs/tags/$version.tar.gz"
-	main_sum=$(sha256sum "./build/opencv_$version.orig.tar.gz" | cut -d ' ' -f 1)
-fi
-if ! [ "$main_sum" == "$sha256_main_source" ]
-then
-	echo "OpenCV main source downloaded does not match checksum"
-	echo "Deleting build folder"
-	rm -rf "./build"
-	exit 1
 fi
 
 
@@ -100,14 +94,6 @@ if ! [ -f "./build/opencv_$version.orig-contrib.tar.gz" ]
 then
 	echo "Downloading contrib OpenCV source"
 	curl -L -o "./build/opencv_$version.orig-contrib.tar.gz" "https://github.com/opencv/opencv_contrib/archive/refs/tags/$version.tar.gz"
-	contrib_sum=$(sha256sum "./build/opencv_$version.orig-contrib.tar.gz" | cut -d ' ' -f 1)
-fi
-if ! [ "$contrib_sum" == "$sha256_contrib_source" ]
-then
-	echo "OpenCV contrib source does not match checksum"
-	echo "Deleting build folder"
-	rm -rf "./build"
-	exit 1
 fi
 
 echo "Extracting sources"
