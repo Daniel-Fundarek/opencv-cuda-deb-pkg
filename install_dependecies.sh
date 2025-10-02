@@ -38,5 +38,7 @@ sudo apt-get install -y \
 sudo apt-get remove -y libopencv libopencv-* libopencv4.2*
 sudo apt-get purge -y libopencv libopencv-* libopencv4.2*
 
+dpkg -l | grep -q opencv-licenses && sudo apt remove -y opencv-licenses && sudo apt purge -y opencv-licenses 
+
 sudo apt install libjs-mathjax -y
 sudo apt install libthrust-dev -y
