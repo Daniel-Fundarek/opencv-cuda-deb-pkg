@@ -35,10 +35,10 @@ sudo apt-get install -y \
   libgoogle-glog-dev libgflags-dev \
   libgphoto2-dev libopenexr-dev libcharls2
 
-sudo apt-get remove -y libopencv libopencv-* libopencv4.2*
+sudo apt-get remove -y libopencv libopencv-* libopencv4.2* 
 sudo apt-get purge -y libopencv libopencv-* libopencv4.2*
 
-dpkg -l | grep -q opencv-licenses && sudo apt remove -y opencv-licenses && sudo apt purge -y opencv-licenses 
+sudo apt remove -y opencv-samples-data opencv-licenses
 
 sudo apt install libjs-mathjax -y
 sudo apt install libthrust-dev -y
