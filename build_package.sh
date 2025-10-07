@@ -96,6 +96,11 @@ then
 	curl -L -o "./build/opencv_$version.orig-contrib.tar.gz" "https://github.com/opencv/opencv_contrib/archive/refs/tags/$version.tar.gz"
 fi
 
+sudo apt-get remove -y libopencv libopencv-* libopencv4.2* 
+sudo apt-get purge -y libopencv libopencv-* libopencv4.2*
+
+sudo apt remove -y opencv-samples-data opencv-licenses
+
 echo "Extracting sources"
 cd build
 tar xf opencv_$version.orig.tar.gz
