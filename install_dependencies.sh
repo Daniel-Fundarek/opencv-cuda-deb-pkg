@@ -6,7 +6,7 @@ if [ -f /etc/os-release ]; then
 	# Extract the major version number from VERSION_ID
 	VERSION_MAJOR=$(echo "$VERSION_ID" | cut -d'.' -f1)
 	# Check if the extracted major version is 22 or earlier
-	if [ "$VERSION_MAJOR" = "22" ]; then
+	if [ "$VERSION_MAJOR" = "22" ] || [ "$VERSION_MAJOR" = "24" ]; then
 		sudo apt-get install -y libswresample-dev libdc1394-dev
 	else
 	sudo apt-get install -y libavresample-dev libdc1394-22-dev
@@ -16,7 +16,7 @@ else
 fi
 
 sudo apt-get install -y \
-  debhelper dh-python  nvidia-jetpack libjpeg-dev \
+  debhelper dh-python libjpeg-dev \
   libjpeg8-dev libjpeg-turbo8-dev \
   libpng-dev libtiff-dev libglew-dev \
   libavcodec-dev libavformat-dev libswscale-dev \
@@ -33,7 +33,7 @@ sudo apt-get install -y \
   liblapack-dev liblapacke-dev libeigen3-dev gfortran \
   libhdf5-dev libprotobuf-dev protobuf-compiler \
   libgoogle-glog-dev libgflags-dev \
-  libgphoto2-dev libopenexr-dev libcharls2
+  libgphoto2-dev libopenexr-dev libcharls2 cmake
 
 sudo apt-get remove -y libopencv libopencv-* libopencv4.2* 
 sudo apt-get purge -y libopencv libopencv-* libopencv4.2*
@@ -42,3 +42,4 @@ sudo apt remove -y opencv-samples-data opencv-licenses
 
 sudo apt install libjs-mathjax -y
 sudo apt install libthrust-dev -y
+sudo apt install curl -y

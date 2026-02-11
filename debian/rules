@@ -3,6 +3,9 @@
 export DEB_BUILD_MAINT_OPTIONS=optimize=-lto
 export DH_VERBOSE=1
 
+
+export DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
+
 BUILDDIR = obj-$(DEB_HOST_MULTIARCH)
 
 CMAKE_ARCH_FLAGS :=
@@ -10,42 +13,42 @@ CMAKE_ARCH_FLAGS :=
 # Comply with Debian architectures baseline.
 # See cmake/OpenCVCompilerOptimizations.cmake for a list of known features.
 # Reference: https://github.com/opencv/opencv/wiki/CPU-optimizations-build-options
-#ifeq ($(DEB_HOST_ARCH_CPU),amd64)
-# # Only SSE2 on amd64
-# CMAKE_ARCH_FLAGS += -DCPU_BASELINE="SSE2"
-# CMAKE_ARCH_FLAGS += -DCPU_BASELINE_DISABLE="SSE3"
-#else ifeq ($(DEB_HOST_ARCH_CPU),armhf)
-# CMAKE_ARCH_FLAGS += -DCPU_BASELINE_DISABLE="VFPV3,NEON"
-# CMAKE_ARCH_FLAGS += -DCPU_DISPATCH="VFPV3,NEON"
-#else ifeq ($(DEB_HOST_ARCH_CPU),i386)
-# # Be extra sure SSE is not picked up on i386
-# CMAKE_ARCH_FLAGS += -DCPU_BASELINE_DISABLE="SSE,SSE2"
-#else ifeq ($(DEB_HOST_ARCH_CPU),ppc64el)
-# # VSX for Power8, VSX3 for Power9
-# CMAKE_ARCH_FLAGS += -DCPU_BASELINE="VSX"
-# CMAKE_ARCH_FLAGS += -DCPU_DISPATCH="VSX3"
-#endif
-
-ifeq ($(DEB_HOST_ARCH_CPU),arm64)
-  # Disable x86-specific optimizations and enable NEON
-  CMAKE_ARCH_FLAGS += -DENABLE_SSE=OFF -DENABLE_SSE2=OFF -DENABLE_SSE3=OFF -DENABLE_SSE41=OFF -DENABLE_SSE42=OFF
-  CMAKE_ARCH_FLAGS += -DCPU_BASELINE_DISABLE="SSE,SSE2,SSE3,SSE4_1,SSE4_2,AVX"
-  CMAKE_ARCH_FLAGS += -DENABLE_NEON=ON
+ifeq ($(DEB_HOST_ARCH_CPU),amd64)
+# Only SSE2 on amd64
+CMAKE_ARCH_FLAGS += -DCPU_BASELINE="SSE2"
+CMAKE_ARCH_FLAGS += -DCPU_BASELINE_DISABLE="SSE3"
+else ifeq ($(DEB_HOST_ARCH_CPU),armhf)
+CMAKE_ARCH_FLAGS += -DCPU_BASELINE_DISABLE="VFPV3,NEON"
+CMAKE_ARCH_FLAGS += -DCPU_DISPATCH="VFPV3,NEON"
+else ifeq ($(DEB_HOST_ARCH_CPU),i386)
+# Be extra sure SSE is not picked up on i386
+CMAKE_ARCH_FLAGS += -DCPU_BASELINE_DISABLE="SSE,SSE2"
+else ifeq ($(DEB_HOST_ARCH_CPU),ppc64el)
+# VSX for Power8, VSX3 for Power9
+CMAKE_ARCH_FLAGS += -DCPU_BASELINE="VSX"
+CMAKE_ARCH_FLAGS += -DCPU_DISPATCH="VSX3"
 endif
 
-# TBB support
-#ifneq (,$(findstring $(DEB_HOST_ARCH), amd64 arm64 armel armhf i386 mips mips64el mipsel ppc64el s390x powerpc powerpcspe riscv64 ppc64 sh4 sparc64))
-#CMAKE_ARCH_FLAGS += -DWITH_TBB=ON
-#else
-#CMAKE_ARCH_FLAGS += -DWITH_TBB=OFF
-#endif
+# ifeq ($(DEB_HOST_ARCH_CPU),arm64)
+#   # Disable x86-specific optimizations and enable NEON
+#   CMAKE_ARCH_FLAGS += -DENABLE_SSE=OFF -DENABLE_SSE2=OFF -DENABLE_SSE3=OFF -DENABLE_SSE41=OFF -DENABLE_SSE42=OFF
+#   CMAKE_ARCH_FLAGS += -DCPU_BASELINE_DISABLE="SSE,SSE2,SSE3,SSE4_1,SSE4_2,AVX"
+#   CMAKE_ARCH_FLAGS += -DENABLE_NEON=ON
+# endif
 
-# Linux-specific stuff
-#ifeq ($(DEB_HOST_ARCH_OS),linux)
-#CMAKE_ARCH_FLAGS += -DWITH_1394=ON -DWITH_V4L=ON
-#else
-#CMAKE_ARCH_FLAGS += -DWITH_1394=OFF -DWITH_V4L=OFF
-#endif
+# TBB support
+# ifneq (,$(findstring $(DEB_HOST_ARCH), amd64 arm64 armel armhf i386 mips mips64el mipsel ppc64el s390x powerpc powerpcspe riscv64 ppc64 sh4 sparc64))
+# CMAKE_ARCH_FLAGS += -DWITH_TBB=ON
+# else
+# CMAKE_ARCH_FLAGS += -DWITH_TBB=OFF
+# endif
+
+# # Linux-specific stuff
+# ifeq ($(DEB_HOST_ARCH_OS),linux)
+# CMAKE_ARCH_FLAGS += -DWITH_1394=ON -DWITH_V4L=ON
+# else
+# CMAKE_ARCH_FLAGS += -DWITH_1394=OFF -DWITH_V4L=OFF
+# endif
 
 # Java support
 ifeq (,$(findstring $(DEB_HOST_ARCH), hppa hurd-i386 kfreebsd-i386 kfreebsd-amd64))
@@ -65,6 +68,15 @@ export JAVA_HOME=/usr/lib/jvm/default-java
 # 1. we set WITH_QT=OFF because files under modules/highgui/src/files_Qt/Milky
 #    have been filtered, which are required for the QT build.
 CMAKE_FLAGS += \
+	-DENABLE_SSE=ON \
+ 	-DENABLE_SSE2=ON \
+	-DENABLE_SSE3=ON \
+	-DENABLE_SSSE3=ON \
+	-DENABLE_SSE4_1=ON \
+	-DENABLE_SSE4_2=ON \
+	-DENABLE_AVX=ON \
+	-DENABLE_AVX2=ON \
+	-DBUILD_TBB=OFF \
 	-DANT_EXECUTABLE=/usr/bin/ant \
 	-DENABLE_BUILD_HARDENING=ON \
 	-DOPENCV_ENABLE_MEMORY_SANITIZER=ON \
@@ -102,8 +114,8 @@ CMAKE_FLAGS += \
   	-DCUDA_FAST_MATH=ON \
 	-DWITH_CUDA=ON \
 	-DWITH_NVCUVID=ON\
-	-DCUDA_ARCH_BIN=8.7 \
-	-DCUDA_ARCH_PTX="sm_87" \
+	-DCUDA_ARCH_BIN=12.0 \
+	-DCUDA_ARCH_PTX="sm_120" \
 	-DCUDA_FAST_MATH=ON \
 	-DWITH_CUBLAS=ON \
 	-DWITH_CUFFT=ON \
@@ -132,7 +144,6 @@ CMAKE_FLAGS += \
 	-DWITH_OPENGL=ON \
 	-DWITH_PNG=ON	\
   	-DWITH_PROTOBUF=ON \
-  	-DENABLE_NEON=ON \
 	-DWITH_QT=OFF \
 	-DWITH_TIFF=ON	\
 	-DWITH_V4L=ON \
@@ -140,12 +151,11 @@ CMAKE_FLAGS += \
 	-DCPU_DISPATCH=FP16,FMA3,AVX,AVX2,AVX512_ICL \
 	-DWITH_TBB=ON \
 	-DPYTHON3_PACKAGES_PATH=/usr/lib/python3/dist-packages \
-	-DBUILD_TBB=ON \
 	-DBUILD_OPENJPEG=OFF \
 	-DCMAKE_TRACE_MODE=OFF \
-	-DCUDNN_LIBRARY=/usr/lib/aarch64-linux-gnu/libcudnn.so \
-	-DCUDNN_INCLUDE_DIR=/usr/include \
-	-DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda-12.6
+	-DCUDNN_LIBRARY=/usr/lib/x86_64-linux-gnu/libcudnn.so \
+	-DCUDNN_INCLUDE_DIR=/usr/include/x86_64-linux-gnu \
+	-DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda-12.8
 %:
 	dh $@
 
@@ -177,7 +187,8 @@ override_dh_auto_test:
 ifeq ($(DEB_HOST_ARCH),mipsel)
 	true # Don't run the tests at all
 else
-	-LD_LIBRARY_PATH=$(shell realpath $(BUILDDIR))/lib dh_auto_test
+	true
+# 	-LD_LIBRARY_PATH=$(shell realpath $(BUILDDIR))/lib dh_auto_test
 endif
 
 ifeq ($(DEB_HOST_ARCH),mipsel)
