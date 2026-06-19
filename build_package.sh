@@ -22,7 +22,7 @@ sudo apt-get install -y \
   liblapack-dev liblapacke-dev libeigen3-dev gfortran \
   libhdf5-dev libprotobuf-dev protobuf-compiler \
   libgoogle-glog-dev libgflags-dev \
-  libgphoto2-dev libopenexr-dev libcharls2
+  libgphoto2-dev libopenexr-dev libcharls2 libatlas3-base
 
 
 if [ -f /etc/os-release ]; then
